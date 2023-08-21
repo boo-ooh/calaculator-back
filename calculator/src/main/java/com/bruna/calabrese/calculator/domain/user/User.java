@@ -1,5 +1,6 @@
 package com.bruna.calabrese.calculator.domain.user;
 
+import com.bruna.calabrese.calculator.domain.record.Record;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Table(name = "user")
 @Entity(name = "user")
@@ -26,6 +28,9 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private Status status;
+//
+//    @OneToMany(mappedBy = "user")
+//    private Set<Record> records;
 
     public User(String username, String password, Status status) {
         this.username = username;

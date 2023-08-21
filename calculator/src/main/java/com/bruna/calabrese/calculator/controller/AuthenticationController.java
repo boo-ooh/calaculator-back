@@ -1,11 +1,10 @@
 package com.bruna.calabrese.calculator.controller;
 
-import com.bruna.calabrese.calculator.domain.user.AuthenticationDTO;
-import com.bruna.calabrese.calculator.domain.user.LoginResponseDTO;
-import com.bruna.calabrese.calculator.domain.user.Status;
-import com.bruna.calabrese.calculator.domain.user.User;
+import com.bruna.calabrese.calculator.domain.user.*;
 import com.bruna.calabrese.calculator.infra.security.TokenService;
 import com.bruna.calabrese.calculator.repositories.UserRepository;
+import com.bruna.calabrese.calculator.services.AuthenticationService;
+import com.bruna.calabrese.calculator.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,19 +21,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private AuthenticationService authenticationService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private TokenService tokenService;
+    private UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
-        var userNamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
-        var auth = this.authenticationManager.authenticate(userNamePassword);
-        var token = tokenService.generateToken((User) auth.getPrincipal());
+    public ResponseEntity login(@RequestBody @Valid AuthenticationDTO dto) {
+        String token = authenticationService.authenticateLogin(dto);
+        UserDTO userDTO = userService.getUserWithBalance(dto);
 
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+        return ResponseEntity.ok(new LoginResponseDTO(userDTO,token));
     }
 
     @PostMapping("/register")

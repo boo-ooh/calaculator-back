@@ -16,6 +16,7 @@ public class UserController {
 
     @GetMapping
     public UserDTO getUser() {
-        return new UserDTO(userRepository.findById(1).orElseThrow(() -> new RuntimeException("User not found.")));
+        return new UserDTO(userRepository.findById(1).orElseThrow(() -> new RuntimeException("User not found.")),0.0);
     }
+
 }
