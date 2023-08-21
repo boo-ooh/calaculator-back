@@ -5,7 +5,7 @@ import com.bruna.calabrese.calculator.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Table(name = "record")
 @Entity(name = "record")
@@ -32,6 +32,6 @@ public class Record {
     private Double userBalance;
     @Column(name="operation_response")
     private String operationResponse;
-    private LocalDate date;
+    private LocalDateTime date;
 
 }

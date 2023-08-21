@@ -22,7 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
@@ -46,11 +46,10 @@ class AuthenticationControllerTest {
     RecordRepository recordRepository;
 
     AuthenticationDTO authenticationDTO = new AuthenticationDTO("Test", "test");
-    UserDTO userDTO = new UserDTO(1, "Test", Status.ACTIVE, 100.0);
 
     User user = new User(1, "Test", "Test", Status.ACTIVE);
 
-    Record record = new Record(1,user, new Operation(1, OperationTypes.addition, 5.0, "Add"),10.0, 10.0, "33", LocalDate.now());
+    Record record = new Record(1,user, new Operation(1, OperationTypes.addition, 5.0, "Add"),10.0, 10.0, "33", LocalDateTime.now());
 
     @Test
     void login() {
@@ -59,7 +58,6 @@ class AuthenticationControllerTest {
         when(userRepository.findByUsername(authenticationDTO.username())).thenReturn(user);
         when(recordRepository.findTopByUserIdOrderByDateDesc(user.getId())).thenReturn(Optional.of(record));
         when(authentication.getPrincipal()).thenReturn(user);
-//        when(tokenService.generateToken(user)).thenReturn("validToken");
         try {
             String json = objectMapper.writeValueAsString(authenticationDTO);
             var response = mockMvc.perform(post("/auth/login")

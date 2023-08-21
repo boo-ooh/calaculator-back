@@ -1,15 +1,12 @@
 package com.bruna.calabrese.calculator.controller;
 
 import com.bruna.calabrese.calculator.domain.user.*;
-import com.bruna.calabrese.calculator.infra.security.TokenService;
+import com.bruna.calabrese.calculator.repositories.RecordRepository;
 import com.bruna.calabrese.calculator.repositories.UserRepository;
 import com.bruna.calabrese.calculator.services.AuthenticationService;
-import com.bruna.calabrese.calculator.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,14 +22,14 @@ public class AuthenticationController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private UserService userService;
+    private RecordRepository recordRepository;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO dto) {
         String token = authenticationService.authenticateLogin(dto);
-        UserDTO userDTO = userService.getUserWithBalance(dto);
+        User user = userRepository.findByUsername(dto.username());
 
-        return ResponseEntity.ok(new LoginResponseDTO(userDTO,token));
+        return ResponseEntity.ok(new LoginResponseDTO(new UserDTO(user),token));
     }
 
     @PostMapping("/register")
