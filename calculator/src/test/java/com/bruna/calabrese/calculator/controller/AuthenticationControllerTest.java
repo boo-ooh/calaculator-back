@@ -1,11 +1,14 @@
 package com.bruna.calabrese.calculator.controller;
 
+import com.bruna.calabrese.calculator.domain.operation.Operation;
+import com.bruna.calabrese.calculator.domain.operation.OperationTypes;
+import com.bruna.calabrese.calculator.domain.record.Record;
 import com.bruna.calabrese.calculator.domain.user.AuthenticationDTO;
 import com.bruna.calabrese.calculator.domain.user.Status;
+import com.bruna.calabrese.calculator.domain.user.User;
 import com.bruna.calabrese.calculator.domain.user.UserDTO;
-import com.bruna.calabrese.calculator.infra.security.TokenService;
+import com.bruna.calabrese.calculator.repositories.RecordRepository;
 import com.bruna.calabrese.calculator.repositories.UserRepository;
-import com.bruna.calabrese.calculator.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -18,11 +21,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -30,31 +35,38 @@ class AuthenticationControllerTest {
     @Autowired
     MockMvc mockMvc;
     @MockBean
-    UserRepository userRepository;
-    @MockBean
     AuthenticationManager authenticationManager;
-    @MockBean
-    TokenService tokenService;
     @Autowired
     ObjectMapper objectMapper;
     @Mock
     Authentication authentication;
-    @Mock
-    UserService userService;
+    @MockBean
+    UserRepository userRepository;
+    @MockBean
+    RecordRepository recordRepository;
+
     AuthenticationDTO authenticationDTO = new AuthenticationDTO("Test", "test");
     UserDTO userDTO = new UserDTO(1, "Test", Status.ACTIVE, 100.0);
+
+    User user = new User(1, "Test", "Test", Status.ACTIVE);
+
+    Record record = new Record(1,user, new Operation(1, OperationTypes.addition, 5.0, "Add"),10.0, 10.0, "33", LocalDate.now());
 
     @Test
     void login() {
         var userNamePassword = new UsernamePasswordAuthenticationToken(authenticationDTO.username(), authenticationDTO.password());
         when(authenticationManager.authenticate(userNamePassword)).thenReturn(authentication);
-        when(userService.getUserWithBalance(authenticationDTO)).thenReturn(userDTO);
+        when(userRepository.findByUsername(authenticationDTO.username())).thenReturn(user);
+        when(recordRepository.findTopByUserIdOrderByDateDesc(user.getId())).thenReturn(Optional.of(record));
+        when(authentication.getPrincipal()).thenReturn(user);
+//        when(tokenService.generateToken(user)).thenReturn("validToken");
         try {
             String json = objectMapper.writeValueAsString(authenticationDTO);
-            mockMvc.perform(post("/auth/login")
+            var response = mockMvc.perform(post("/auth/login")
                             .content(json)
                             .contentType("application/json"))
-                    .andExpect(status().isOk());
+                    .andExpect(status().isOk())
+            ;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

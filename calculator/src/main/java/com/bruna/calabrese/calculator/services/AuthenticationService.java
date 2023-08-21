@@ -3,7 +3,6 @@ package com.bruna.calabrese.calculator.services;
 import com.bruna.calabrese.calculator.domain.user.AuthenticationDTO;
 import com.bruna.calabrese.calculator.domain.user.User;
 import com.bruna.calabrese.calculator.infra.security.TokenService;
-import com.bruna.calabrese.calculator.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
