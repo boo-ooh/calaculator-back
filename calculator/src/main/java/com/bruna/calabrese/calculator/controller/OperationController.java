@@ -4,6 +4,7 @@ import com.bruna.calabrese.calculator.domain.operation.Operation;
 import com.bruna.calabrese.calculator.domain.operation.OperationDTO;
 import com.bruna.calabrese.calculator.domain.operation.ResultDTO;
 import com.bruna.calabrese.calculator.repositories.OperationRepository;
+import com.bruna.calabrese.calculator.services.OperationService;
 import com.bruna.calabrese.calculator.services.RandomStringService;
 import com.bruna.calabrese.calculator.services.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class OperationController {
     @Autowired
     RandomStringService randomStringService;
 
+    @Autowired
+    OperationService operationService;
+
     @GetMapping
     public List<Operation> getAllOperations() {
         return operationRepository.findAll();
@@ -32,8 +36,7 @@ public class OperationController {
 
     @PostMapping(value = "/addition")
     public ResponseEntity addition(@RequestBody OperationDTO operationDTO) {
-        double result = operationDTO.paramOne() + operationDTO.paramTwo();
-        String resultText = String.valueOf(result);
+        String resultText = operationService.add(operationDTO.paramOne(), operationDTO.paramTwo());
 
         return createNewRecord(operationDTO.operation(), resultText);
 
@@ -41,8 +44,7 @@ public class OperationController {
 
     @PostMapping(value = "/subtraction")
     public ResponseEntity subtraction(@RequestBody OperationDTO operationDTO) {
-        double result = operationDTO.paramOne() - operationDTO.paramTwo();
-        String resultText = String.valueOf(result);
+        String resultText = operationService.subtract(operationDTO.paramOne(), operationDTO.paramTwo());
 
         return createNewRecord(operationDTO.operation(), resultText);
 
@@ -50,8 +52,7 @@ public class OperationController {
 
     @PostMapping(value = "/multiplication")
     public ResponseEntity multiplication(@RequestBody OperationDTO operationDTO) {
-        double result = operationDTO.paramOne() * operationDTO.paramTwo();
-        String resultText = String.valueOf(result);
+        String resultText = operationService.multiply(operationDTO.paramOne(), operationDTO.paramTwo());
 
         return createNewRecord(operationDTO.operation(), resultText);
 
@@ -59,8 +60,7 @@ public class OperationController {
 
     @PostMapping(value = "/division")
     public ResponseEntity division(@RequestBody OperationDTO operationDTO) {
-        double result = operationDTO.paramOne() / operationDTO.paramTwo();
-        String resultText = String.valueOf(result);
+        String resultText = operationService.divide(operationDTO.paramOne(), operationDTO.paramTwo());
 
         return createNewRecord(operationDTO.operation(), resultText);
 
@@ -68,8 +68,7 @@ public class OperationController {
 
     @PostMapping(value = "/square_root")
     public ResponseEntity squareRoot(@RequestBody OperationDTO operationDTO) {
-        double result = Math.sqrt(operationDTO.paramOne());
-        String resultText = String.valueOf(result);
+        String resultText = operationService.squareRoot(operationDTO.paramOne());
 
         return createNewRecord(operationDTO.operation(), resultText);
 
