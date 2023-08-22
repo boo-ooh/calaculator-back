@@ -49,7 +49,7 @@ class AuthenticationControllerTest {
 
     User user = new User(1, "Test", "Test", Status.ACTIVE);
 
-    Record record = new Record(1,user, new Operation(1, OperationTypes.addition, 5.0, "Add"),10.0, 10.0, "33", LocalDateTime.now());
+    Record record = new Record(1,user, new Operation(1, OperationTypes.addition, 5.0, "Add"),10.0, 10.0, "33", LocalDateTime.now(), false);
 
     @Test
     void login() {

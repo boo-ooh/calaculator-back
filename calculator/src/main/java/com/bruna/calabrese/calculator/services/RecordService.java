@@ -18,7 +18,7 @@ public class RecordService {
 
     public List<Record> getAllByCurrentUser(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return recordRepository.findByUserIdAndOperationIsNotNull(user.getId());
+        return recordRepository.findByUserIdAndDeletedAndOperationIsNotNull(user.getId(), false);
     }
     public Double getCurrentUserCredit(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -39,7 +39,14 @@ public class RecordService {
         record.setUserBalance(newBalance);
         record.setOperationResponse(result);
         record.setDate(LocalDateTime.now());
+        record.setDeleted(false);
 
+        recordRepository.save(record);
+    }
+
+    public void deleteRecord(Integer recordId) {
+        Record record = recordRepository.findById(recordId).get();
+        record.setDeleted(true);
         recordRepository.save(record);
     }
 }

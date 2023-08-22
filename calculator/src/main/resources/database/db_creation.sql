@@ -14,27 +14,21 @@ CREATE TABLE `calculator`.`operation` (
   `display_name` VARCHAR(45) NULL,
   PRIMARY KEY (`id`));
   
-  CREATE TABLE `calculator`.`record` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `operation_id` INT NULL,
-  `user_id` INT NULL,
-  `amount` DOUBLE NULL,
-  `user_balance` DOUBLE NULL,
-  `operation_response` VARCHAR(45) NULL,
-  `date` DATETIME NULL,
+CREATE TABLE `record` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `operation_id` int DEFAULT NULL,
+  `user_id` int DEFAULT NULL,
+  `amount` double DEFAULT NULL,
+  `user_balance` double DEFAULT NULL,
+  `operation_response` varchar(45) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  `deleted` tinyint NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  INDEX `id_idx` (`operation_id` ASC) VISIBLE,
-  INDEX `id_idx1` (`user_id` ASC) VISIBLE,
-  CONSTRAINT `operation_FK`
-    FOREIGN KEY (`operation_id`)
-    REFERENCES `calculator`.`operation` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `user_FK`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `calculator`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+  KEY `id_idx` (`operation_id`),
+  KEY `id_idx1` (`user_id`),
+  CONSTRAINT `operation_FK` FOREIGN KEY (`operation_id`) REFERENCES `operation` (`id`),
+  CONSTRAINT `user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+)
 
 
 INSERT INTO `calculator`.`operation` (`type`, `cost`, `display_name`) VALUES ('addition', '5', 'Add');

@@ -33,5 +33,6 @@ public class Record {
     @Column(name="operation_response")
     private String operationResponse;
     private LocalDateTime date;
+    private Boolean deleted;
 
 }

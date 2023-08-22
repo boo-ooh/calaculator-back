@@ -13,7 +13,7 @@ public interface RecordRepository extends JpaRepository<Record,Integer> {
 
     Optional<Record> findTopByUserIdOrderByDateDesc(Integer userId);
 
-    List<Record> findByUserIdAndOperationIsNotNull(Integer userId);
+    List<Record> findByUserIdAndDeletedAndOperationIsNotNull(Integer userId, Boolean deleted);
 
 
 
