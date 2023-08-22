@@ -6,7 +6,6 @@ import com.bruna.calabrese.calculator.domain.record.Record;
 import com.bruna.calabrese.calculator.domain.user.AuthenticationDTO;
 import com.bruna.calabrese.calculator.domain.user.Status;
 import com.bruna.calabrese.calculator.domain.user.User;
-import com.bruna.calabrese.calculator.domain.user.UserDTO;
 import com.bruna.calabrese.calculator.repositories.RecordRepository;
 import com.bruna.calabrese.calculator.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
